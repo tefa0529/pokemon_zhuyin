@@ -187,6 +187,36 @@
     .grid { gap: 10px; }
     .card { page-break-inside: avoid; }
   }
+
+  .btn-special {
+    background-color: #ec4899;
+    color: white;
+    border-color: #db2777;
+    box-shadow: 0 4px 0 #be185d;
+  }
+  .btn-special:active {
+    transform: translateY(3px);
+    box-shadow: 0 1px 0 #be185d;
+  }
+
+  .symbol-badge {
+    position: absolute;
+    top: 8px;
+    right: 12px;
+    background: #ff4757;
+    color: white;
+    font-size: 20px;
+    font-weight: bold;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 6px rgba(255, 71, 87, 0.4);
+    border: 2px solid white;
+  }
+
 </style>
 </head>
 <body>
@@ -201,6 +231,7 @@
       <input type="number" id="maxIdInput" class="number-input" value="200" min="12" max="500">
     </div>
 
+    <button class="btn btn-special" onclick="showZhuyinRepresentative()">⭐ 注音代表（37音全覽）</button>
     <button class="btn btn-generate" onclick="generateRandomPokemon()">🎲 隨機產生 12 隻</button>
     <button class="btn" onclick="shuffleZhuyin()">🔀 打散注音配對</button>
     <button class="btn btn-reset" onclick="resetZhuyin()">↺ 歸位復原</button>
@@ -210,11 +241,251 @@
 </div>
 
 <script>
+
+const zhuyinRepresentatives = [
+  {
+    "symbol": "ㄅ",
+    "name": "暴鯉龍",
+    "id": 130,
+    "zhuyin": "ㄅㄠˋ ㄌㄧˇ ㄌㄨㄥˊ"
+  },
+  {
+    "symbol": "ㄆ",
+    "name": "皮卡丘",
+    "id": 25,
+    "zhuyin": "ㄆㄧˊ ㄎㄚˇ ㄑㄧㄡ"
+  },
+  {
+    "symbol": "ㄇ",
+    "name": "妙蛙種子",
+    "id": 1,
+    "zhuyin": "ㄇㄧㄠˋ ㄨㄚ ㄓㄨㄥˇ ㄗˇ"
+  },
+  {
+    "symbol": "ㄈ",
+    "name": "風速狗",
+    "id": 59,
+    "zhuyin": "ㄈㄥ ㄙㄨˋ ㄍㄡˇ"
+  },
+  {
+    "symbol": "ㄉ",
+    "name": "呆呆獸",
+    "id": 79,
+    "zhuyin": "ㄉㄞ ㄉㄞ ㄕㄡˋ"
+  },
+  {
+    "symbol": "ㄊ",
+    "name": "土龍弟弟",
+    "id": 206,
+    "zhuyin": "ㄊㄨˇ ㄌㄨㄥˊ ㄉㄧˋ ㄉㄧ˙"
+  },
+  {
+    "symbol": "ㄋ",
+    "name": "黏美龍",
+    "id": 706,
+    "zhuyin": "ㄋㄧㄢˊ ㄇㄟˇ ㄌㄨㄥˊ"
+  },
+  {
+    "symbol": "ㄌ",
+    "name": "路卡利歐",
+    "id": 448,
+    "zhuyin": "ㄌㄨˋ ㄎㄚˇ ㄌㄧˋ ㄡ"
+  },
+  {
+    "symbol": "ㄍ",
+    "name": "蓋歐卡",
+    "id": 382,
+    "zhuyin": "ㄍㄞˋ ㄡ ㄎㄚˇ"
+  },
+  {
+    "symbol": "ㄎ",
+    "name": "卡比獸",
+    "id": 143,
+    "zhuyin": "ㄎㄚˇ ㄅㄧˇ ㄕㄡˋ"
+  },
+  {
+    "symbol": "ㄏ",
+    "name": "火焰鳥",
+    "id": 146,
+    "zhuyin": "ㄏㄨㄛˇ ㄧㄢˋ ㄋㄧㄠˇ"
+  },
+  {
+    "symbol": "ㄐ",
+    "name": "吉雉雞",
+    "id": 1016,
+    "zhuyin": "ㄐㄧˊ ㄓˋ ㄐㄧ"
+  },
+  {
+    "symbol": "ㄑ",
+    "name": "敲音猴",
+    "id": 810,
+    "zhuyin": "ㄑㄧㄠ ㄧㄣ ㄏㄡˊ"
+  },
+  {
+    "symbol": "ㄒ",
+    "name": "小火龍",
+    "id": 4,
+    "zhuyin": "ㄒㄧㄠˇ ㄏㄨㄛˇ ㄌㄨㄥˊ"
+  },
+  {
+    "symbol": "ㄓ",
+    "name": "哲爾尼亞斯",
+    "id": 716,
+    "zhuyin": "ㄓㄜˊ ㄦˇ ㄋㄧˊ ㄧㄚˇ ㄙ"
+  },
+  {
+    "symbol": "ㄔ",
+    "name": "超夢",
+    "id": 150,
+    "zhuyin": "ㄔㄠ ㄇㄥˋ"
+  },
+  {
+    "symbol": "ㄕ",
+    "name": "閃電鳥",
+    "id": 145,
+    "zhuyin": "ㄕㄢˇ ㄉㄧㄢˋ ㄋㄧㄠˇ"
+  },
+  {
+    "symbol": "ㄖ",
+    "name": "弱丁魚",
+    "id": 746,
+    "zhuyin": "ㄖㄨㄛˋ ㄉㄧㄥ ㄩˊ"
+  },
+  {
+    "symbol": "ㄗ",
+    "name": "藏瑪然特",
+    "id": 889,
+    "zhuyin": "ㄗㄤˋ ㄇㄚˇ ㄖㄢˊ ㄊㄜˋ"
+  },
+  {
+    "symbol": "ㄘ",
+    "name": "蒼響",
+    "id": 888,
+    "zhuyin": "ㄘㄤ ㄒㄧㄤˇ"
+  },
+  {
+    "symbol": "ㄙ",
+    "name": "索羅亞",
+    "id": 570,
+    "zhuyin": "ㄙㄨㄛˇ ㄌㄨㄛˊ ㄧㄚˇ"
+  },
+  {
+    "symbol": "ㄧ",
+    "name": "伊布",
+    "id": 133,
+    "zhuyin": "ㄧ ㄅㄨˋ"
+  },
+  {
+    "symbol": "ㄨ",
+    "name": "烏鴉頭頭",
+    "id": 430,
+    "zhuyin": "ㄨ ㄧㄚ ㄊㄡˊ ㄊㄡˊ"
+  },
+  {
+    "symbol": "ㄩ",
+    "name": "圓陸鯊",
+    "id": 443,
+    "zhuyin": "ㄩㄢˊ ㄌㄨˋ ㄕㄚ"
+  },
+  {
+    "symbol": "ㄚ",
+    "name": "阿勃梭魯",
+    "id": 359,
+    "zhuyin": "ㄚ ㄅㄛˊ ㄙㄨㄛ ㄌㄨˇ"
+  },
+  {
+    "symbol": "ㄛ",
+    "name": "波克比",
+    "id": 175,
+    "zhuyin": "ㄅㄛ ㄎㄜˋ ㄅㄧˇ"
+  },
+  {
+    "symbol": "ㄜ",
+    "name": "惡食大王",
+    "id": 799,
+    "zhuyin": "ㄜˋ ㄕˊ ㄉㄚˋ ㄨㄤˊ"
+  },
+  {
+    "symbol": "ㄝ",
+    "name": "夜巡靈",
+    "id": 355,
+    "zhuyin": "ㄧㄝˋ ㄒㄩㄣˊ ㄌㄧㄥˊ"
+  },
+  {
+    "symbol": "ㄞ",
+    "name": "愛管事",
+    "id": 876,
+    "zhuyin": "ㄞˋ ㄍㄨㄢˇ ㄕˋ"
+  },
+  {
+    "symbol": "ㄟ",
+    "name": "黑魯加",
+    "id": 229,
+    "zhuyin": "ㄏㄟ ㄌㄨˇ ㄐㄧㄚ"
+  },
+  {
+    "symbol": "ㄠ",
+    "name": "奧利瓦",
+    "id": 930,
+    "zhuyin": "ㄠˋ ㄌㄧˋ ㄨㄚˇ"
+  },
+  {
+    "symbol": "ㄡ",
+    "name": "勾魂眼",
+    "id": 302,
+    "zhuyin": "ㄍㄡ ㄏㄨㄣˊ ㄧㄢˇ"
+  },
+  {
+    "symbol": "ㄢ",
+    "name": "安瓢蟲",
+    "id": 166,
+    "zhuyin": "ㄢ ㄆㄧㄠˊ ㄔㄨㄥˊ"
+  },
+  {
+    "symbol": "ㄣ",
+    "name": "噴火龍",
+    "id": 6,
+    "zhuyin": "ㄆㄣ ㄏㄨㄛˇ ㄌㄨㄥˊ"
+  },
+  {
+    "symbol": "ㄤ",
+    "name": "胖丁",
+    "id": 39,
+    "zhuyin": "ㄆㄤˋ ㄉㄧㄥ"
+  },
+  {
+    "symbol": "ㄥ",
+    "name": "耿鬼",
+    "id": 94,
+    "zhuyin": "ㄍㄥˇ ㄍㄨㄟˇ"
+  },
+  {
+    "symbol": "ㄦ",
+    "name": "阿爾宙斯",
+    "id": 493,
+    "zhuyin": "ㄚ ㄦˇ ㄓㄡˋ ㄙ"
+  }
+];
+
+function showZhuyinRepresentative() {
+  currentPokemons = zhuyinRepresentatives.map(p => {
+    return {
+      id: p.id,
+      name: p.name,
+      zhuyin: p.zhuyin,
+      symbol: p.symbol,
+      img: `https://assets.pokemon.com/assets/cms2/img/pokedex/full/${padNum(p.id)}.png`
+    };
+  });
+  
+  resetZhuyin();
+}
+
 // Built-in complete dictionary for Pokemon 1 to 500
 const pokemonDB = {
   "1": {
     "name": "妙蛙種子",
-    "zhuyin": "ㄇㄧㄠˋ ㄨㄚ ㄓㄨㄥˇ ㄗˇ"
+    "zhuyin": "ㄇㄧㄠˋ ㄨㄚ ㄓㄨㄥˇ ㄗ˙"
   },
   "2": {
     "name": "妙蛙草",
@@ -318,11 +589,11 @@ const pokemonDB = {
   },
   "27": {
     "name": "穿山鼠",
-    "zhuyin": "ㄔㄨㄢ ㄕㄢ ㄕㄨˇ"
+    "zhuyin": "ㄨㄢ ㄕㄢ ㄕㄨˇ"
   },
   "28": {
     "name": "穿山王",
-    "zhuyin": "ㄔㄨㄢ ㄕㄢ ㄨㄤˊ"
+    "zhuyin": "ㄨㄢ ㄕㄢ ㄨㄤˊ"
   },
   "29": {
     "name": "尼多蘭",
@@ -474,7 +745,7 @@ const pokemonDB = {
   },
   "66": {
     "name": "腕力",
-    "zhuyin": "ㄨㄢˇ ㄌㄧˋ"
+    "zhuyin": "ㄨㄢˋ ㄌㄧˋ"
   },
   "67": {
     "name": "豪力",
@@ -586,7 +857,7 @@ const pokemonDB = {
   },
   "94": {
     "name": "耿鬼",
-    "zhuyin": "ㄍㄥˇ ㄍㄨㄟˇ"
+    "zhuyin": "ㄍㄥˇ ㄍㄨㄟˋ"
   },
   "95": {
     "name": "大岩蛇",
@@ -706,7 +977,7 @@ const pokemonDB = {
   },
   "124": {
     "name": "迷唇姐",
-    "zhuyin": "ㄇㄧˊ ㄔㄨㄣˊ ㄐㄧㄝˇ"
+    "zhuyin": "ㄇㄧˊ ㄔㄨㄣ ㄐㄧㄝˇ"
   },
   "125": {
     "name": "電擊獸",
@@ -869,16 +1140,16 @@ const pokemonDB = {
     "zhuyin": "ㄇㄠ ㄊㄡˊ ㄧㄝˋ ㄧㄥ"
   },
   "165": {
-    "name": "芭瓢蟲",
-    "zhuyin": "ㄅㄚ ㄆㄧㄠˊ ㄔㄨㄥˊ"
+    "name": "芭芭鷹",
+    "zhuyin": "ㄅㄚ ㄅㄚ ㄧㄥ"
   },
   "166": {
-    "name": "安瓢蟲",
-    "zhuyin": "ㄣ ㄆㄧㄠˊ ㄔㄨㄥˊ"
+    "name": "安平蟲",
+    "zhuyin": "ㄚㄣ ㄆㄧㄥˊ ㄔㄨㄥˊ"
   },
   "167": {
-    "name": "圓絲蛛",
-    "zhuyin": "ㄩㄢˊ ㄙ ㄓㄨ"
+    "name": "阿利多斯",
+    "zhuyin": "ㄚ ㄌㄧˋ ㄉㄨㄛ ㄙ"
   },
   "168": {
     "name": "阿利多斯",
@@ -2254,6 +2525,7 @@ function renderCards() {
     card.className = 'card';
     card.innerHTML = `
       <div class="poke-num">No. ${padNum(p.id)}</div>
+      ${p.symbol ? `<div class="symbol-badge">${p.symbol}</div>` : ''}
       <img src="${p.img}" alt="${p.name}" onerror="this.src='https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${p.id}.png'">
       <div class="poke-name">${p.name}</div>
       <div class="zhuyin-box">
